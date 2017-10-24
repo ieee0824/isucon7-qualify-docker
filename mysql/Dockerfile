@@ -23,5 +23,14 @@ RUN set -e \
 
 
 RUN set -e \
-	&& echo "bash /tmp/isubata/bench/bin/gen-initial-dataset" >> /docker-entrypoint-initdb.d/init.sh \
-	&& echo "bash /tmp/isubata/db/init.sh" >> /docker-entrypoint-initdb.d/init.sh
+	&& chmod +x /tmp/isubata/bench/bin/gen-initial-dataset \
+	&& echo "cd /tmp/isubata/bench" >> /docker-entrypoint-initdb.d/init.sh \
+	&& echo "/tmp/isubata/bench/bin/gen-initial-dataset" >> /docker-entrypoint-initdb.d/init.sh \
+	&& echo "cd /tmp/isubata" >> /docker-entrypoint-initdb.d/init.sh \
+	&& echo "bash /tmp/isubata/db/init.sh" >> /docker-entrypoint-initdb.d/init.sh \
+	&& echo "mysql -uroot -e \"CREATE USER isucon@'%' IDENTIFIED BY 'isucon'; GRANT ALL on *.* TO isucon@'%'; CREATE USER isucon@'localhost' IDENTIFIED BY 'isucon'; GRANT ALL on *.* TO isucon@'localhost';\"" >> /docker-entrypoint-initdb.d/init.sh \
+	&& echo "zcat /tmp/isubata/bench/isucon7q-initial-dataset.sql.gz | mysql -uroot --default-character-set=utf8 isubata" >> /docker-entrypoint-initdb.d/init.sh \
+	&& chmod -R 777 /tmp/isubata/bench
+
+
+WORKDIR /

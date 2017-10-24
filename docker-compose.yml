@@ -1,0 +1,24 @@
+version: '2'
+services:
+    app:
+        environment:
+            - GOPATH=/root/isubata/webapp/go
+        command: |
+            bash -c "cd /root/isubata/webapp/go; make; ./isubata"
+        build:
+            context: ./app
+            dockerfile: Dockerfile
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        ports:
+            - 80:80
+    db:
+        build:
+            context: ./mysql
+            dockerfile: Dockerfile
+        ports:
+            - 3306:3306
+        environment:
+            - MYSQL_ALLOW_EMPTY_PASSWORD=yes

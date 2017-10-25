@@ -22,3 +22,10 @@ services:
             - 3306:3306
         environment:
             - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    bench:
+        working_dir: /root/isubata/bench
+        build:
+            context: ./app
+            dockerfile: Dockerfile
+        command: |
+            ./bin/bench -remotes=nginx -output result.json
